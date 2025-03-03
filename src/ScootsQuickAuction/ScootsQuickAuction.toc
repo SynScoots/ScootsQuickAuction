@@ -1,0 +1,8 @@
+## Interface: 30300
+## X-Compatible-With: 30305
+## Title: ScootsQuickAuction
+## Notes: Rapidly create auctions at a predefined price
+## Author: Scoots
+## SavedVariables: SQA_OPTIONS
+
+ScootsQuickAuction.lua
