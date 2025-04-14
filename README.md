@@ -8,6 +8,6 @@ Download this repository, then extract the `ScootsQuickAuction` subdirectory fro
 
 ## Screenshots ##
 
-![Screenshot of the interface](./img/interface.png)
+![Screenshot of the interface](./img/interface-new.png)
 
 ![Screenshot of rapidly created auctions](./img/auction-created.png)
