@@ -348,22 +348,22 @@ function SQA.onLoad()
     
         if(_G['SQA_OPTIONS'] ~= nil) then
             if(_G['SQA_OPTIONS'].bidGold ~= nil) then
-                SQA.options.Unforged.bidG = _G['SQA_OPTIONS'].bidGold
+                newOptions.Unforged.bidG = _G['SQA_OPTIONS'].bidGold
             end
             if(_G['SQA_OPTIONS'].bidSilver ~= nil) then
-                SQA.options.Unforged.bidS = _G['SQA_OPTIONS'].bidSilver
+                newOptions.Unforged.bidS = _G['SQA_OPTIONS'].bidSilver
             end
             if(_G['SQA_OPTIONS'].bidCopper ~= nil) then
-                SQA.options.Unforged.bidC = _G['SQA_OPTIONS'].bidCopper
+                newOptions.Unforged.bidC = _G['SQA_OPTIONS'].bidCopper
             end
             if(_G['SQA_OPTIONS'].buyGold ~= nil) then
-                SQA.options.Unforged.buyG = _G['SQA_OPTIONS'].buyGold
+                newOptions.Unforged.buyG = _G['SQA_OPTIONS'].buyGold
             end
             if(_G['SQA_OPTIONS'].buySilver ~= nil) then
-                SQA.options.Unforged.buyS = _G['SQA_OPTIONS'].buySilver
+                newOptions.Unforged.buyS = _G['SQA_OPTIONS'].buySilver
             end
             if(_G['SQA_OPTIONS'].buyCopper ~= nil) then
-                SQA.options.Unforged.buyC = _G['SQA_OPTIONS'].buyCopper
+                newOptions.Unforged.buyC = _G['SQA_OPTIONS'].buyCopper
             end
         end
         
