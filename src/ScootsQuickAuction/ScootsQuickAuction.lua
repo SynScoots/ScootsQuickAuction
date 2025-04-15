@@ -59,9 +59,10 @@ function SQA.clickOptionsButton()
         'AuctionsBidSort',
         'AuctionsScrollFrame',
         'AuctionsScrollFrameScrollChildFrame',
-        'AuctionsScrollFrameScrollBar',
-        'AuctionsScrollFrameScrollBarScrollUpButton',
-        'AuctionsScrollFrameScrollBarScrollDownButton',
+        'AuctionsCancelAuctionButton'
+    }
+    
+    local auctionListingFrames = {
         'AuctionsButton1',
         'AuctionsButton2',
         'AuctionsButton3',
@@ -70,8 +71,13 @@ function SQA.clickOptionsButton()
         'AuctionsButton6',
         'AuctionsButton7',
         'AuctionsButton8',
-        'AuctionsButton9',
-        'AuctionsCancelAuctionButton'
+        'AuctionsButton9'
+    }
+    
+    local auctionScrollBarFrames = {
+        'AuctionsScrollFrameScrollBar',
+        'AuctionsScrollFrameScrollBarScrollUpButton',
+        'AuctionsScrollFrameScrollBarScrollDownButton'
     }
     
     if(SQA.optionsOpen == false) then
@@ -79,21 +85,50 @@ function SQA.clickOptionsButton()
             if(_G[frameName] ~= nil) then
                 _G[frameName]:Hide()
             end
-            
-            SQA.frames.optionsMaster:Show()
         end
         
+        for _, frameName in pairs(auctionListingFrames) do
+            if(_G[frameName] ~= nil) then
+                _G[frameName]:Hide()
+            end
+        end
+        
+        for _, frameName in pairs(auctionScrollBarFrames) do
+            if(_G[frameName] ~= nil) then
+                _G[frameName]:Hide()
+            end
+        end
+        
+        SQA.frames.optionsMaster:Show()
         SQA.optionsOpen = true
     else
         for _, frameName in pairs(auctionFrames) do
             if(_G[frameName] ~= nil) then
                 _G[frameName]:Show()
             end
-            
-            SQA.frames.optionsMaster:Hide()
-            SQA.setOptions()
         end
         
+        local _, numAuctions = GetNumAuctionItems('owner')
+        for index, frameName in pairs(auctionListingFrames) do
+            if(index > numAuctions) then
+                break
+            end
+        
+            if(_G[frameName] ~= nil) then
+                _G[frameName]:Show()
+            end
+        end
+        
+        if(numAuctions > 9) then
+            for _, frameName in pairs(auctionScrollBarFrames) do
+                if(_G[frameName] ~= nil) then
+                    _G[frameName]:Show()
+                end
+            end
+        end
+        
+        SQA.setOptions()
+        SQA.frames.optionsMaster:Hide()
         SQA.optionsOpen = false
     end
 end
