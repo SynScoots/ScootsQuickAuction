@@ -8,6 +8,6 @@ Download this repository, then extract the `ScootsQuickAuction` subdirectory fro
 
 ## Screenshots ##
 
-![Screenshot of the interface](./img/interface-new.png)
+![Screenshot of the interface](./img/interface-new-mythic.png)
 
 ![Screenshot of rapidly created auctions](./img/auction-created.png)

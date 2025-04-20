@@ -6,3 +6,4 @@
 ## SavedVariables: SQA_OPTIONS
 
 ScootsQuickAuction.lua
+ScootsQuickAuction.xml

@@ -8,6 +8,10 @@ SQA.optionsOpen = false
 SQA.frames = {}
 SQA.frames.master = CreateFrame('Frame', 'ScootsQuickAuctionMasterFrame', UIParent)
 
+function ScootsQuickAuction_RegisterTTH(tooltip)
+    SQA.TTH = tooltip
+end
+
 function SQA.openAuctionHouse()
     if(SQA.loaded == false) then
         SQA.buttons = {}
@@ -147,8 +151,188 @@ function SQA.renderOptions()
         'Lightforged'
     }
     
+    local subLevels = {
+        'Regular',
+        'Mythic'
+    }
+    
     local anchorPoint = nil
     for _, level in pairs(levels) do
+        local key = 'ScootsQuickAuctionOptions' .. level
+        
+        -- Level header
+        SQA.frames['options' .. level .. 'Header'] = CreateFrame('Frame', key .. 'Header', SQA.frames.optionsMaster)
+        SQA.frames['options' .. level .. 'Header']:SetFrameStrata('MEDIUM')
+        SQA.frames['options' .. level .. 'Header']:SetWidth(SQA.frames.optionsMaster:GetWidth() - 10)
+        SQA.frames['options' .. level .. 'Header']:SetHeight(12)
+        SQA.frames['options' .. level .. 'Header'].text = SQA.frames['options' .. level .. 'Header']:CreateFontString(nil, 'ARTWORK')
+        SQA.frames['options' .. level .. 'Header'].text:SetFont('Fonts\\FRIZQT__.TTF', 12)
+        SQA.frames['options' .. level .. 'Header'].text:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+        SQA.frames['options' .. level .. 'Header'].text:SetHeight(12)
+        SQA.frames['options' .. level .. 'Header'].text:SetAllPoints()
+        SQA.frames['options' .. level .. 'Header'].text:SetJustifyH('LEFT')
+        SQA.frames['options' .. level .. 'Header'].text:SetText(level)
+        
+        if(anchorPoint == nil) then
+            SQA.frames['options' .. level .. 'Header']:SetPoint('TOPLEFT', SQA.frames.optionsMaster, 'TOPLEFT', 5, -5)
+        else
+            SQA.frames['options' .. level .. 'Header']:SetPoint('TOPLEFT', anchorPoint, 'BOTTOMLEFT', 0, -24)
+        end
+        
+        anchorPoint = SQA.frames['options' .. level .. 'Header']
+        
+        for _, subLevel in pairs(subLevels) do
+            local suffix = ''
+            local stepDown = -20
+            if(subLevel == 'Mythic') then
+                suffix = '-mythic'
+                stepDown = -10
+            end
+        
+            -- Sublevel header
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader'] = CreateFrame('Frame', key .. subLevel .. 'SubHeader', SQA.frames.optionsMaster)
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader']:SetFrameStrata('MEDIUM')
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader']:SetWidth(45)
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader']:SetHeight(10)
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader']:SetPoint('TOPLEFT', anchorPoint, 'BOTTOMLEFT', 0, stepDown)
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader'].text = SQA.frames['options' .. level .. subLevel .. 'SubHeader']:CreateFontString(nil, 'ARTWORK')
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader'].text:SetFont('Fonts\\FRIZQT__.TTF', 10)
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader'].text:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader'].text:SetHeight(10)
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader'].text:SetAllPoints()
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader'].text:SetJustifyH('LEFT')
+            SQA.frames['options' .. level .. subLevel .. 'SubHeader'].text:SetText(subLevel)
+            
+            anchorPoint = SQA.frames['options' .. level .. subLevel .. 'SubHeader']
+            
+            -- Bid input
+            SQA.frames['options' .. level .. subLevel .. 'Bid'] = CreateFrame('EditBox', key .. subLevel .. 'Bid', SQA.frames.optionsMaster, 'MoneyInputFrameTemplate')
+            SQA.frames['options' .. level .. subLevel .. 'Bid']:SetPoint('TOPLEFT', SQA.frames['options' .. level .. subLevel .. 'SubHeader'], 'TOPRIGHT', 5, 3)
+            SQA.frames['options' .. level .. subLevel .. 'Bid']:SetFrameStrata('MEDIUM')
+            SQA.frames['options' .. level .. subLevel .. 'Bid']:SetMaxLetters(2)
+            SQA.frames['options' .. level .. subLevel .. 'Bid']:SetHeight(20)
+            SQA.frames['options' .. level .. subLevel .. 'Bid']:SetMovable(false)
+            SQA.frames['options' .. level .. subLevel .. 'Bid']:SetAutoFocus(false)
+            SQA.frames['options' .. level .. subLevel .. 'Bid'].gold:SetMaxLetters(6)
+            SQA.frames['options' .. level .. subLevel .. 'Bid'].silver:SetMaxLetters(2)
+            SQA.frames['options' .. level .. subLevel .. 'Bid'].copper:SetMaxLetters(2)
+            
+            SQA.frames['options' .. level .. subLevel .. 'Bid'].gold:SetNumber(SQA.options[level .. suffix].bidG)
+            SQA.frames['options' .. level .. subLevel .. 'Bid'].silver:SetNumber(SQA.options[level .. suffix].bidS)
+            SQA.frames['options' .. level .. subLevel .. 'Bid'].copper:SetNumber(SQA.options[level .. suffix].bidC)
+            
+            -- Bid header
+            if(subLevel ~= 'Mythic') then
+                SQA.frames['options' .. level .. 'BidHeader'] = CreateFrame('Frame', key .. subLevel .. 'BidHeader', SQA.frames.optionsMaster)
+                SQA.frames['options' .. level .. 'BidHeader']:SetPoint('BOTTOMLEFT', SQA.frames['options' .. level .. subLevel .. 'Bid'], 'TOPLEFT', -5, 2)
+                SQA.frames['options' .. level .. 'BidHeader']:SetFrameStrata('MEDIUM')
+                SQA.frames['options' .. level .. 'BidHeader']:SetWidth(100)
+                SQA.frames['options' .. level .. 'BidHeader']:SetHeight(10)
+                SQA.frames['options' .. level .. 'BidHeader'].text = SQA.frames['options' .. level .. 'BidHeader']:CreateFontString(nil, 'ARTWORK')
+                SQA.frames['options' .. level .. 'BidHeader'].text:SetFont('Fonts\\FRIZQT__.TTF', 10)
+                SQA.frames['options' .. level .. 'BidHeader'].text:SetHeight(10)
+                SQA.frames['options' .. level .. 'BidHeader'].text:SetAllPoints()
+                SQA.frames['options' .. level .. 'BidHeader'].text:SetJustifyH('LEFT')
+                SQA.frames['options' .. level .. 'BidHeader'].text:SetText('Starting Price')
+            end
+            
+            -- Buy input
+            SQA.frames['options' .. level .. subLevel .. 'Buy'] = CreateFrame('EditBox', key .. subLevel .. 'Buy', SQA.frames.optionsMaster, 'MoneyInputFrameTemplate')
+            SQA.frames['options' .. level .. subLevel .. 'Buy']:SetPoint('TOPLEFT', SQA.frames['options' .. level .. subLevel .. 'Bid'], 'TOPRIGHT', 10, 0)
+            SQA.frames['options' .. level .. subLevel .. 'Buy']:SetFrameStrata('MEDIUM')
+            SQA.frames['options' .. level .. subLevel .. 'Buy']:SetMaxLetters(2)
+            SQA.frames['options' .. level .. subLevel .. 'Buy']:SetHeight(20)
+            SQA.frames['options' .. level .. subLevel .. 'Buy']:SetMovable(false)
+            SQA.frames['options' .. level .. subLevel .. 'Buy']:SetAutoFocus(false)
+            SQA.frames['options' .. level .. subLevel .. 'Buy'].gold:SetMaxLetters(6)
+            SQA.frames['options' .. level .. subLevel .. 'Buy'].silver:SetMaxLetters(2)
+            SQA.frames['options' .. level .. subLevel .. 'Buy'].copper:SetMaxLetters(2)
+            
+            SQA.frames['options' .. level .. subLevel .. 'Buy'].gold:SetNumber(SQA.options[level .. suffix].buyG)
+            SQA.frames['options' .. level .. subLevel .. 'Buy'].silver:SetNumber(SQA.options[level .. suffix].buyS)
+            SQA.frames['options' .. level .. subLevel .. 'Buy'].copper:SetNumber(SQA.options[level .. suffix].buyC)
+            
+            -- Buy header
+            if(subLevel ~= 'Mythic') then
+                SQA.frames['options' .. level .. 'BuyHeader'] = CreateFrame('Frame', key .. 'BuyHeader', SQA.frames.optionsMaster)
+                SQA.frames['options' .. level .. 'BuyHeader']:SetPoint('BOTTOMLEFT', SQA.frames['options' .. level .. subLevel .. 'Buy'], 'TOPLEFT', -5, 2)
+                SQA.frames['options' .. level .. 'BuyHeader']:SetFrameStrata('MEDIUM')
+                SQA.frames['options' .. level .. 'BuyHeader']:SetWidth(100)
+                SQA.frames['options' .. level .. 'BuyHeader']:SetHeight(10)
+                SQA.frames['options' .. level .. 'BuyHeader'].text = SQA.frames['options' .. level .. 'BuyHeader']:CreateFontString(nil, 'ARTWORK')
+                SQA.frames['options' .. level .. 'BuyHeader'].text:SetFont('Fonts\\FRIZQT__.TTF', 10)
+                SQA.frames['options' .. level .. 'BuyHeader'].text:SetHeight(10)
+                SQA.frames['options' .. level .. 'BuyHeader'].text:SetAllPoints()
+                SQA.frames['options' .. level .. 'BuyHeader'].text:SetJustifyH('LEFT')
+                SQA.frames['options' .. level .. 'BuyHeader'].text:SetText('Buyout Price')
+            end
+            
+            -- Enabled check
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'] = CreateFrame('Frame', key .. subLevel .. 'Enabled', SQA.frames.optionsMaster)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].level = level
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].suffix = suffix
+            SQA.frames['options' .. level .. subLevel .. 'Toggle']:SetPoint('TOPLEFT', SQA.frames['options' .. level .. subLevel .. 'Buy'], 'TOPRIGHT', 0, -2)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle']:SetFrameStrata('MEDIUM')
+            SQA.frames['options' .. level .. subLevel .. 'Toggle']:SetHeight(18)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].text = SQA.frames['options' .. level .. subLevel .. 'Toggle']:CreateFontString(nil, 'ARTWORK')
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].text:SetFont('Fonts\\FRIZQT__.TTF', 10)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].text:SetPoint('LEFT', 18, 0)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].text:SetJustifyH('LEFT')
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].text:SetTextColor(1, 1, 1)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].text:SetText('Enabled')
+            SQA.frames['options' .. level .. subLevel .. 'Toggle']:SetWidth(SQA.frames['options' .. level .. subLevel .. 'Toggle'].text:GetStringWidth() + 20)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle']:EnableMouse(true)
+            
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder = CreateFrame('Frame', key .. 'EnabledCheckBorder', SQA.frames['options' .. level .. subLevel .. 'Toggle'])
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder:SetFrameStrata('MEDIUM')
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder:SetSize(18, 18)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder:SetPoint('TOPLEFT', SQA.frames['options' .. level .. subLevel .. 'Toggle'], 'TOPLEFT', -2, -1)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder.texture = SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder:CreateTexture()
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder.texture:SetAllPoints()
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder.texture:SetTexture('Interface/AchievementFrame/UI-Achievement-Progressive-IconBorder')
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder.texture:SetTexCoord(0, 0.65625, 0, 0.65625)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].checkBorder:SetAlpha(0.8)
+            
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].check = CreateFrame('Frame', key .. 'EnabledCheck', SQA.frames['options' .. level .. subLevel .. 'Toggle'])
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].check:SetFrameStrata('MEDIUM')
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].check:SetSize(18, 18)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].check:SetPoint('TOPLEFT', SQA.frames['options' .. level .. subLevel .. 'Toggle'], 'TOPLEFT', -2, -2)
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].check.texture = SQA.frames['options' .. level .. subLevel .. 'Toggle'].check:CreateTexture()
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].check.texture:SetAllPoints()
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].check.texture:SetTexture('Interface/AchievementFrame/UI-Achievement-Criteria-Check')
+            SQA.frames['options' .. level .. subLevel .. 'Toggle'].check.texture:SetTexCoord(0, 0.65625, 0, 1)
+            
+            if(SQA.options[level .. suffix].enabled ~= true) then
+                SQA.frames['options' .. level .. subLevel .. 'Toggle'].check:Hide()
+            end
+            
+            SQA.frames['options' .. level .. subLevel .. 'Toggle']:SetScript('OnEnter', function(self)
+                self.checkBorder:SetAlpha(1)
+            end)
+            
+            SQA.frames['options' .. level .. subLevel .. 'Toggle']:SetScript('OnLeave', function(self)
+                self.checkBorder:SetAlpha(0.8)
+            end)
+            
+            SQA.frames['options' .. level .. subLevel .. 'Toggle']:SetScript('OnMouseDown', function(self, button)
+                if(button == 'LeftButton') then
+                    if(SQA.options[self.level .. self.suffix].enabled == true) then
+                        self.check:Hide()
+                        SQA.options[self.level .. self.suffix].enabled = false
+                    else
+                        self.check:Show()
+                        SQA.options[self.level .. self.suffix].enabled = true
+                    end
+                end
+            end)
+        end
+    end
+    
+    local anchorPoint = nil
+    for _, level in pairs(levels) do
+        if(true) then
+            break
+        end
         local key = 'ScootsQuickAuctionOptions' .. level
         SQA.frames['options' .. level .. 'Header'] = CreateFrame('Frame', key .. 'Header', SQA.frames.optionsMaster)
         SQA.frames['options' .. level .. 'Header']:SetFrameStrata('MEDIUM')
@@ -312,28 +496,41 @@ function SQA.setOptions()
     }
     
     for _, level in pairs(levels) do
-        SQA.options[level].bidG = SQA.frames['options' .. level .. 'Bid'].gold:GetNumber()
-        SQA.options[level].bidS = SQA.frames['options' .. level .. 'Bid'].silver:GetNumber()
-        SQA.options[level].bidC = SQA.frames['options' .. level .. 'Bid'].copper:GetNumber()
-        SQA.options[level].buyG = SQA.frames['options' .. level .. 'Buy'].gold:GetNumber()
-        SQA.options[level].buyS = SQA.frames['options' .. level .. 'Buy'].silver:GetNumber()
-        SQA.options[level].buyC = SQA.frames['options' .. level .. 'Buy'].copper:GetNumber()
+        SQA.options[level].bidG = SQA.frames['options' .. level .. 'RegularBid'].gold:GetNumber()
+        SQA.options[level].bidS = SQA.frames['options' .. level .. 'RegularBid'].silver:GetNumber()
+        SQA.options[level].bidC = SQA.frames['options' .. level .. 'RegularBid'].copper:GetNumber()
+        SQA.options[level].buyG = SQA.frames['options' .. level .. 'RegularBuy'].gold:GetNumber()
+        SQA.options[level].buyS = SQA.frames['options' .. level .. 'RegularBuy'].silver:GetNumber()
+        SQA.options[level].buyC = SQA.frames['options' .. level .. 'RegularBuy'].copper:GetNumber()
+        
+        SQA.options[level .. '-mythic'].bidG = SQA.frames['options' .. level .. 'MythicBid'].gold:GetNumber()
+        SQA.options[level .. '-mythic'].bidS = SQA.frames['options' .. level .. 'MythicBid'].silver:GetNumber()
+        SQA.options[level .. '-mythic'].bidC = SQA.frames['options' .. level .. 'MythicBid'].copper:GetNumber()
+        SQA.options[level .. '-mythic'].buyG = SQA.frames['options' .. level .. 'MythicBuy'].gold:GetNumber()
+        SQA.options[level .. '-mythic'].buyS = SQA.frames['options' .. level .. 'MythicBuy'].silver:GetNumber()
+        SQA.options[level .. '-mythic'].buyC = SQA.frames['options' .. level .. 'MythicBuy'].copper:GetNumber()
     end
     
     _G['SQA_OPTIONS'] = SQA.options
 end
 
-local function getTooltipLines(tooltip)
-    local lines = {}
-    local tooltipLines = {tooltip:GetRegions()}
+function SQA.itemIsMythic(itemLink)
+    SQA.TTH:ClearLines()
+    SQA.TTH:SetOwner(UIParent)
+    SQA.TTH:SetHyperlink(itemLink)
     
-    for _, line in ipairs(tooltipLines) do
+    for _, line in ipairs({SQA.TTH:GetRegions()}) do
         if(line:IsObjectType('FontString')) then
-            table.insert(lines, line:GetText())
+            if(line:GetText() == 'Mythic') then
+                SQA.TTH:Hide()
+                return true
+            end
         end
     end
     
-    return lines
+    SQA.TTH:Hide()
+    
+    return false
 end
 
 function SQA.doAuctionEvent(self, event, ...)
@@ -350,6 +547,10 @@ function SQA.doAuctionEvent(self, event, ...)
             local level = 'Unforged'
             if(levels[forge] ~= nil) then
                 level = levels[forge]
+            end
+            
+            if(SQA.itemIsMythic(SQA.activeItem)) then
+                level = level .. '-mythic'
             end
             
             if(SQA.options[level].enabled == true) then
@@ -407,9 +608,13 @@ function SQA.onLoad()
     
     local levels = {
         'Unforged',
+        'Unforged-mythic',
         'Titanforged',
+        'Titanforged-mythic',
         'Warforged',
-        'Lightforged'
+        'Warforged-mythic',
+        'Lightforged',
+        'Lightforged-mythic'
     }
     
     local values = {
