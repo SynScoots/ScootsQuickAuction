@@ -654,12 +654,6 @@ function SQA.eventHandler(self, event, arg1)
         SQA.openAuctionHouse()
     elseif(event == 'AUCTION_HOUSE_CLOSED') then
         SQA.closeAuctionHouse()
-    elseif(event == 'AUCTION_ITEM_LIST_UPDATE') then
---        SQA.setForgedIconsOnBrowse()
-    elseif(event == 'AUCTION_BIDDER_LIST_UPDATE') then
---        SQA.setForgedIconsOnBids()
-    elseif(event == 'AUCTION_OWNED_LIST_UPDATE') then
---        SQA.setForgedIconsOnAuctions()
     end
 end
 
@@ -667,6 +661,3 @@ SQA.frames.master:SetScript('OnEvent', SQA.eventHandler)
 SQA.frames.master:RegisterEvent('AUCTION_HOUSE_SHOW')
 SQA.frames.master:RegisterEvent('AUCTION_HOUSE_CLOSED')
 SQA.frames.master:RegisterEvent('ADDON_LOADED')
-SQA.frames.master:RegisterEvent('AUCTION_ITEM_LIST_UPDATE')
-SQA.frames.master:RegisterEvent('AUCTION_BIDDER_LIST_UPDATE')
-SQA.frames.master:RegisterEvent('AUCTION_OWNED_LIST_UPDATE')
