@@ -487,7 +487,7 @@ function SQA.setForgedIconsOnBrowse()
     for i = 1, 8 do
         local frame = _G['BrowseButton' .. tostring(i) .. 'Item']
         local offset = FauxScrollFrame_GetOffset(BrowseScrollFrame)
-        local index = offset + i + (NUM_AUCTION_ITEMS_PER_PAGE * _G['AuctionFrameBrowse'].page)
+        local index = offset + i
         
         if(frame and frame:IsVisible()) then
             SQA.setForgedIconOnFrame(frame, 'list', index)
@@ -511,7 +511,7 @@ function SQA.setForgedIconsOnAuctions()
     for i = 1, 9 do
         local frame = _G['AuctionsButton' .. tostring(i) .. 'Item']
         local offset = FauxScrollFrame_GetOffset(AuctionsScrollFrame);
-        local index = offset + i + (NUM_AUCTION_ITEMS_PER_PAGE * _G['AuctionFrameAuctions'].page)
+        local index = offset + i
         
         if(frame and frame:IsVisible()) then
             SQA.setForgedIconOnFrame(frame, 'owner', index)
@@ -525,14 +525,15 @@ function SQA.setForgedIconOnFrame(itemFrame, auctionType, index)
     if(not _G[frameName]) then
         CreateFrame('Frame', frameName, itemFrame)
         
-        _G[frameName]:SetPoint('TOPRIGHT', itemFrame, 'TOPRIGHT', 0, 0)
-        _G[frameName]:SetWidth(28)
-        _G[frameName]:SetHeight(28)
+        _G[frameName]:SetPoint('TOPRIGHT', itemFrame, 'TOPRIGHT', 0, -1.25)
+        _G[frameName]:SetWidth(7)
+        _G[frameName]:SetHeight(7)
+        _G[frameName]:SetScale(4)
         _G[frameName]:SetFrameLevel(itemFrame:GetFrameLevel() + 1)
     
         _G[frameName].text = _G[frameName]:CreateFontString(nil, 'ARTWORK')
-        _G[frameName].text:SetFont([[Interface\AddOns\ScootsQuickAuction\Fonts\dfdrsp__.TTF]], 12, 'THICKOUTLINE')
-        _G[frameName].text:SetPoint('TOPRIGHT', 0, -6)
+        _G[frameName].text:SetFont([[Interface\AddOns\ScootsQuickAuction\Fonts\dfdrsp__.TTF]], 3, 'THICKOUTLINE')
+        _G[frameName].text:SetPoint('TOPRIGHT', 0, 0)
         _G[frameName].text:SetJustifyH('RIGHT')
         _G[frameName].text:SetShadowOffset(0, 0)
         _G[frameName].text:SetShadowColor(0.1, 0.1, 0.1, 1)
@@ -669,38 +670,3 @@ SQA.frames.master:RegisterEvent('ADDON_LOADED')
 SQA.frames.master:RegisterEvent('AUCTION_ITEM_LIST_UPDATE')
 SQA.frames.master:RegisterEvent('AUCTION_BIDDER_LIST_UPDATE')
 SQA.frames.master:RegisterEvent('AUCTION_OWNED_LIST_UPDATE')
-
-
-
-function dumpvar(data)
-    -- cache of tables already printed, to avoid infinite recursive loops
-    local tablecache = {}
-    local buffer = ""
-    local padder = "    "
- 
-    local function _dumpvar(d, depth)
-        local t = type(d)
-        local str = tostring(d)
-        if (t == "table") then
-            if (tablecache[str]) then
-                -- table already dumped before, so we dont
-                -- dump it again, just mention it
-                buffer = buffer.."<"..str..">\n"
-            else
-                tablecache[str] = (tablecache[str] or 0) + 1
-                buffer = buffer.."("..str..") {\n"
-                for k, v in pairs(d) do
-                    buffer = buffer..string.rep(padder, depth+1).."["..k.."] => "
-                    _dumpvar(v, depth+1)
-                end
-                buffer = buffer..string.rep(padder, depth).."}\n"
-            end
-        elseif (t == "number") then
-            buffer = buffer.."("..t..") "..str.."\n"
-        else
-            buffer = buffer.."("..t..") \""..str.."\"\n"
-        end
-    end
-    _dumpvar(data, 0)
-    return buffer
-end
